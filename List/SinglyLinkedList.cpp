@@ -207,6 +207,79 @@ class SinglyLinkedListMng {
 			}
 			return rs;
 		}
+		
+		//Remove the first element in the list
+		void removeFirst(){
+			if (isEmpty()) return;			//Check the list is empty or not
+			if (head->next==nullptr) {		//The list has only node
+				head=tail=nullptr; return;
+			}
+			head=head->next;
+		}
+		
+		//Remove the last element in the list
+		void removeLast(){
+			if (isEmpty()) return;
+			if (head->next==nullptr) {
+				head=tail=nullptr; return;
+			}			
+			Node* cur=head;
+			while (cur->next!=tail){
+				cur=cur->next;
+			}
+			tail=cur;
+			cur->next=nullptr;							
+		}
+		
+		//Remove the elemment at the position pos
+		void removeAtPos(int pos){
+			int size = countNode();
+			if (pos<0 || pos>=size) return;
+			if (pos==0) {
+				removeFirst();
+				return;
+			}
+			if (pos==size-1){
+				removeLast(); return;
+			}
+			Node* cur=head;
+			int i=0;
+			while (i+1!=pos){
+				cur=cur->next;
+				i++;
+			}
+			cur->next=cur->next->next;
+		}
+		
+		//Remove the element with value as x first found from the left
+		void remove(int x){
+			if (isEmpty()) return;
+			if (head->info == x){
+				head=head->next; return;
+			}		
+			Node* cur=head;
+			while (cur->next!=nullptr){
+				if (cur->next->info==x){
+					cur->next=cur->next->next; return;
+				}					
+				cur=cur->next;
+			}
+		}
+		
+		//Remove all elements with value as x
+		void removeAll(int x){
+			
+		}
+		
+		//Remove the element right before x (first found from the left)
+		void removePre(int x){
+			
+		}
+		
+		//Remove the element right after x (first found from the left)
+		void removePost(int x){
+			
+		}
 		//Display the list info
 		void display() {
 			Node* cur=head;
@@ -228,6 +301,7 @@ int main() {
 	myList.display();
 	myList.addLast(7);
 	myList.addLast(5);
+	myList.addLast(6);
 	myList.addLast(2);
 	myList.display();
 	cout<<"Number of nodes: "<<myList.countNode()<<endl;
@@ -268,13 +342,29 @@ int main() {
 //	} else {
 //		cout<<"Does not exist an element before "<<x<<endl;
 //	}
-	cout<<"Input value to get value after its: ";
-	cin>>x;	
-	rs = myList.getValuePost(x);
-	if (rs != -999){
-		cout<<"The value before "<<x<<" is: "<<rs<<endl;
-	} else {
-		cout<<"Does not exist an element after "<<x<<endl;
-	}	
+//	cout<<"Input value to get value after its: ";
+//	cin>>x;	
+//	rs = myList.getValuePost(x);
+//	if (rs != -999){
+//		cout<<"The value before "<<x<<" is: "<<rs<<endl;
+//	} else {
+//		cout<<"Does not exist an element after "<<x<<endl;
+//	}	
+//	cout<<"\nRemove first element"<<endl;
+//	myList.removeFirst();
+//	myList.display();
+//	cout<<"\nRemove last element"<<endl;
+//	myList.removeLast();
+//	myList.display();
+//	cout<<"Remove at pos"<<endl;
+//	cout<<"Input position of element to remove: ";
+//	cin>>pos;
+//	myList.removeAtPos(pos);
+//	myList.display();
+	cout<<"Remove element with value as x"<<endl;
+	cout<<"Input value to remove: ";
+	cin>>x;
+	myList.remove(x);
+	myList.display();
 	return 0;
 }
