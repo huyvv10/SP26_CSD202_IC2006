@@ -211,24 +211,35 @@ class SinglyLinkedListMng {
 		//Remove the first element in the list
 		void removeFirst(){
 			if (isEmpty()) return;			//Check the list is empty or not
+			Node* temp;
+			temp=head;
 			if (head->next==nullptr) {		//The list has only node
-				head=tail=nullptr; return;
+				head=tail=nullptr; 
+				delete temp;
+				return;
 			}
 			head=head->next;
+			delete temp;
 		}
 		
 		//Remove the last element in the list
 		void removeLast(){
 			if (isEmpty()) return;
+			Node* temp;
 			if (head->next==nullptr) {
-				head=tail=nullptr; return;
+				temp=head;
+				head=tail=nullptr; 
+				delete temp;
+				return;
 			}			
 			Node* cur=head;
 			while (cur->next!=tail){
 				cur=cur->next;
 			}
+			temp=tail;
 			tail=cur;
-			cur->next=nullptr;							
+			cur->next=nullptr;
+			delete temp;							
 		}
 		
 		//Remove the elemment at the position pos
@@ -268,18 +279,75 @@ class SinglyLinkedListMng {
 		
 		//Remove all elements with value as x
 		void removeAll(int x){
-			
+			if (isEmpty()) return;
+			while(head!=nullptr && head->info==x){
+				removeFirst();
+			}
+			Node* cur=head;
+			while (cur!=nullptr && cur->next!=nullptr){
+				if (cur->next==tail && cur->next->info==x) removeLast();
+				if(cur->next!=nullptr && cur->next->info==x){
+					Node* temp = cur->next;
+					cur->next=cur->next->next;
+					delete temp;
+				} else
+					cur=cur->next;
+			}
 		}
 		
 		//Remove the element right before x (first found from the left)
 		void removePre(int x){
-			
+			if (isEmpty() || head->info==x) return;
+			if (head->next->info==x){ removeFirst(); return;}
+			Node* cur=head;
+			while (cur!=nullptr && cur->next!=nullptr){
+				if (cur->next->next!=nullptr && cur->next->next->info==x){
+					Node* temp = cur->next;
+					cur->next=cur->next->next;
+					delete temp;
+					return;
+				}
+				cur=cur->next;
+			}
 		}
 		
 		//Remove the element right after x (first found from the left)
 		void removePost(int x){
+			if (isEmpty() || head->next==nullptr) return;
+			Node* cur = head;
+			while (cur!=nullptr && cur->next!=nullptr){
+				if (cur->next->next==tail && cur->next->info==x) { removeLast(); return;}
+				if (cur->next!=nullptr && cur->info==x){
+					Node* temp=cur->next;
+					cur->next=cur->next->next;
+					delete temp;
+					return;
+				}
+				cur=cur->next;
+			}
+		}
+		
+		//Update newValue for the element at the position pos
+		void editAtPos(int newValue, int pos){
+			int i=0, size = countNode();
+			if (pos < 0 || pos >= size) return;
+			Node* cur = head;
+			while (i!=pos){
+				cur=cur->next;
+				i++;
+			}
+			cur->info=newValue;
+		}
+		
+		//Update newValue for the element before the one with value as x.
+		void editPre(int x, int newValue){
 			
 		}
+		
+		//Update newValue for the element after the one with value as x.
+		void editPost(int x, int newValue){
+			
+		}		
 		//Display the list info
 		void display() {
 			Node* cur=head;
@@ -293,19 +361,23 @@ class SinglyLinkedListMng {
 
 int main() {
 	SinglyLinkedListMng myList;
+	myList.addFirst(6);
+	myList.addFirst(8);
 	myList.addFirst(8);
 	myList.addFirst(5);
-	myList.addFirst(3);
+//	myList.addFirst(3);
+	myList.addFirst(8);
+	myList.addFirst(8);
 	myList.addFirst(9);
-	myList.addFirst(4);
-	myList.display();
-	myList.addLast(7);
-	myList.addLast(5);
-	myList.addLast(6);
+//	myList.addFirst(4);
+//	myList.display();
+//	myList.addLast(7);
+//	myList.addLast(5);
+//	myList.addLast(6);
 	myList.addLast(2);
 	myList.display();
-	cout<<"Number of nodes: "<<myList.countNode()<<endl;
-	cout<<"Number of nodes using for: "<<myList.size()<<endl;
+//	cout<<"Number of nodes: "<<myList.countNode()<<endl;
+//	cout<<"Number of nodes using for: "<<myList.size()<<endl;
 //	cout<<"Input a value to search its position: ";
 	int x, pos, rs;
 //	cin>>x;
@@ -361,10 +433,33 @@ int main() {
 //	cin>>pos;
 //	myList.removeAtPos(pos);
 //	myList.display();
-	cout<<"Remove element with value as x"<<endl;
-	cout<<"Input value to remove: ";
+//	cout<<"Remove element with value as x"<<endl;
+//	cout<<"Input value to remove: ";
+//	cin>>x;
+//	myList.remove(x);
+//	myList.display();
+//	cout<<"Remove all element with value as x"<<endl;
+//	cout<<"Input value to remove: ";
+//	cin>>x;
+//	myList.removeAll(x);
+//	myList.display();
+//	cout<<"Remove an element before the one with value as x"<<endl;
+//	cout<<"Input value to remove: ";
+//	cin>>x;
+//	myList.removePre(x);
+//	myList.display();
+//	cout<<"Remove an element after the one with value as x"<<endl;
+//	cout<<"Input value to remove: ";
+//	cin>>x;
+//	myList.removePost(x);
+//	myList.display();
+	cout<<"Update new value for the element at the position pos"<<endl;
+	cout<<"Input the position to update new value: ";
+	cin>>pos;
+	cout<<"Input the new value: ";
 	cin>>x;
-	myList.remove(x);
+	myList.editAtPos(x,pos);
 	myList.display();
+
 	return 0;
 }
