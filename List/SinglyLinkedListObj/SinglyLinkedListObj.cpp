@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 class Car{
@@ -17,7 +18,7 @@ class Car{
 			this->_price=price;
 		}
 		void displayCar(){
-			cout<<"("<<_id<<", "<<_name<<", "<<_color<<", "<<_price<<")"<<endl;
+			cout<<"("<<left<<setw(5)<<_id<<", "<<setw(20)<< _name<<", "<<setw(7)<<_color<<", "<<right<<setw(10)<<setprecision(10)<<_price<<")"<<endl;
 		}
 };
 
@@ -38,7 +39,15 @@ class SinglyLinkedListObj{
 		SinglyLinkedListObj(){
 			head=tail=nullptr;
 		}
-		~SinglyLinkedListObj(){}
+		~SinglyLinkedListObj(){
+			Node* cur=head;
+			while (cur!=nullptr){
+				Node* tmp = cur;
+				cur=cur->next;
+				delete tmp->info;
+				delete tmp;
+			}
+		}
 		
 		bool isEmpty(){
 			return head==nullptr;
@@ -61,7 +70,6 @@ class SinglyLinkedListObj{
 				cur=cur->next;
 			}
 		}
-	
 };
 
 int main(){
