@@ -2,51 +2,51 @@
 #include <queue>
 
 using namespace std;
-class Node{
+class Node {
 	public:
 		int info;
 		Node *left, *right;
-		Node(int _info){
+		Node(int _info) {
 			this->info=_info;
 			this->left=nullptr;
 			this->right=nullptr;
 		}
 };
 
-class BSTree{
+class BSTree {
 	public:
 		Node* root;
-		BSTree(){
+		BSTree() {
 			this->root=nullptr;
 		}
-		~BSTree(){}
-		
-		bool isEmpty(){
+		~BSTree() {}
+
+		bool isEmpty() {
 			return this->root==nullptr;
-		}	
-		
-		void addNode(int x){
+		}
+
+		void addNode(int x) {
 			Node* newNode = new Node(x);
-			if (isEmpty()){
+			if (isEmpty()) {
 				this->root=newNode;
 				return;
 			}
 			Node* p=this->root;
-			while (p!=nullptr){
-				if (newNode->info == p->info){
+			while (p!=nullptr) {
+				if (newNode->info == p->info) {
 					cout<<x<<" already existed!"<<endl;
 					delete newNode;
 					return;
 				}
-				if (newNode->info < p->info){
-					if (p->left==nullptr){
+				if (newNode->info < p->info) {
+					if (p->left==nullptr) {
 						p->left=newNode;
 						return;
 					} else {
 						p=p->left;
 					}
 				} else {
-					if (p->right==nullptr){
+					if (p->right==nullptr) {
 						p->right=newNode;
 						return;
 					} else {
@@ -55,14 +55,14 @@ class BSTree{
 				}
 			}
 		}
-		
-		void visit(Node* xRoot){
+
+		void visit(Node* xRoot) {
 			if (xRoot==nullptr) return;
 			cout<<xRoot->info<<" ";
 		}
-		
+
 		//visit G_L_R
-		void preOrder(Node* xRoot){
+		void preOrder(Node* xRoot) {
 			if (xRoot==nullptr) return;
 			visit(xRoot);					//Visit root
 			if (xRoot->left!=nullptr)
@@ -70,73 +70,74 @@ class BSTree{
 			if (xRoot->right!=nullptr)
 				preOrder(xRoot->right);		//Visit right subtree
 		}
-		
+
 		//visit L_G_R
-		void inOrder(Node* xRoot){
+		void inOrder(Node* xRoot) {
 			if (xRoot==nullptr) return;
 			if (xRoot->left!=nullptr)
 				inOrder(xRoot->left);		//Visit left subtree
 			visit(xRoot);					//Visit root
 			if (xRoot->right!=nullptr)
-				inOrder(xRoot->right);		//Visit right subtree			
+				inOrder(xRoot->right);		//Visit right subtree
 		}
 		//visit L_R_G
-		void postOrder(Node* xRoot){
+		void postOrder(Node* xRoot) {
 			if (xRoot==nullptr) return;
 			if (xRoot->left!=nullptr)
 				postOrder(xRoot->left);		//Visit left subtree
 			if (xRoot->right!=nullptr)
-				postOrder(xRoot->right);		//Visit right subtree			
+				postOrder(xRoot->right);		//Visit right subtree
 			visit(xRoot);					//Visit root
 		}
-		
+
 		//Count number of nodes within the tree
-		int countNodes(Node* xRoot){
+		int countNodes(Node* xRoot) {
 			int g=0, l=0, r=0;
 			if (xRoot==nullptr) return 0;
 			g++;					//Visit root
 			if (xRoot->left!=nullptr)
 				l=countNodes(xRoot->left);		//Visit left subtree
 			if (xRoot->right!=nullptr)
-				r=countNodes(xRoot->right);		//Visit right subtree	
-			return g+l+r;						
+				r=countNodes(xRoot->right);		//Visit right subtree
+			return g+l+r;
 		}
 
-		int countNodesBFS(Node* xRoot){
+		int countNodesBFS(Node* xRoot) {
+			if (xRoot == nullptr) return 0;
 			int count=0;
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				count++;
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
-			}			
+					myQ.push(p->right);
+			}
 			return count;
-		}		
-		void breadthFirstTraversal(Node* xRoot){
+		}
+		void breadthFirstTraversal(Node* xRoot) {
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				visit(p);
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
+					myQ.push(p->right);
 			}
 		}
-		
+
 		//Count all nodes as leaf nodes - external nodes
-		int countAllLeafNodes(Node* xRoot){
+		int countAllLeafNodes(Node* xRoot) {
 			int count=0;
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				if (p->left==nullptr && p->right==nullptr)
@@ -144,17 +145,17 @@ class BSTree{
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
-			}			
-			return count;		
+					myQ.push(p->right);
+			}
+			return count;
 		}
-		
+
 		//Return number of internal nodes.
-		int countInternalNodes(Node* xRoot){
+		int countInternalNodes(Node* xRoot) {
 			int count=0;
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				if (p->left!=nullptr || p->right!=nullptr)
@@ -162,17 +163,17 @@ class BSTree{
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
-			}			
-			return count;			
+					myQ.push(p->right);
+			}
+			return count;
 		}
-		
+
 		//Return number of nodes which only has left subtree
-		int countNodesHasOnlyLeftChild(Node* xRoot){
+		int countNodesHasOnlyLeftChild(Node* xRoot) {
 			int count=0;
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				if (p->left!=nullptr && p->right==nullptr)
@@ -180,17 +181,17 @@ class BSTree{
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
-			}			
+					myQ.push(p->right);
+			}
 			return count;
 		}
 
 		//Return number of nodes which only has right subtree
-		int countNodesHasOnlyRightChild(Node* xRoot){
+		int countNodesHasOnlyRightChild(Node* xRoot) {
 			int count=0;
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				if (p->left==nullptr && p->right!=nullptr)
@@ -198,17 +199,17 @@ class BSTree{
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
-			}			
+					myQ.push(p->right);
+			}
 			return count;
-		}		
+		}
 
 		//Return number of nodes which have two children
-		int countNodesHaveTwoChildren(Node* xRoot){
+		int countNodesHaveTwoChildren(Node* xRoot) {
 			int count=0;
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				if (p->left!=nullptr && p->right!=nullptr)
@@ -216,174 +217,183 @@ class BSTree{
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
-			}			
+					myQ.push(p->right);
+			}
 			return count;
-		}	
-		
+		}
+
 		//Return the maximum node - The right most node.
-		Node* findTheRightMostNode(Node* xRoot){
+		Node* findTheRightMostNode(Node* xRoot) {
 			if (xRoot==nullptr) return nullptr;
 			Node* p = xRoot;
-			while (p->right!=nullptr){
+			while (p->right!=nullptr) {
 				p=p->right;
 			}
 			return p;
-		}	
+		}
 
 		//Return the minimum node - The left most node.
-		Node* findTheLeftMostNode(Node* xRoot){
+		Node* findTheLeftMostNode(Node* xRoot) {
 			if (xRoot==nullptr) return nullptr;
 			Node* p = xRoot;
-			while (p->left!=nullptr){
+			while (p->left!=nullptr) {
 				p=p->left;
 			}
 			return p;
-		}		
-		
-		Node* deleteByCopyingLeft(Node* xRoot, int x){
+		}
+
+		Node* deleteByCopyingLeft(Node* xRoot, int x) {
 			if (xRoot==nullptr) return nullptr;
 			Node* p = xRoot;
-			if (x < p->info){
+			if (x < p->info) {
 				p->left=deleteByCopyingLeft(p->left, x);
-			} else if (x > p->info){
+			} else if (x > p->info) {
 				p->right = deleteByCopyingLeft(p->right, x);
-			} else {	
+			} else {
 				if (xRoot->left==nullptr)
 					return xRoot->right;
 				if (xRoot->right==nullptr)
-					return xRoot->left;				
+					return xRoot->left;
 				Node* copyNode = findTheRightMostNode(p->left);
 				xRoot->info = copyNode->info;
-				xRoot->left = deleteByCopyingLeft(xRoot->left, copyNode->info);				
+				xRoot->left = deleteByCopyingLeft(xRoot->left, copyNode->info);
 			}
 			return xRoot;
 		}
-		
+
 		//Delete by copying following the right subtree
-		Node* deleteByCopyingRight(Node* xRoot, int x){
+		Node* deleteByCopyingRight(Node* xRoot, int x) {
 			if (xRoot==nullptr) return nullptr;
 			Node* p = xRoot;
-			if (x < p->info){
+			if (x < p->info) {
 				p->left=deleteByCopyingRight(p->left, x);
-			} else if (x > p->info){
+			} else if (x > p->info) {
 				p->right = deleteByCopyingRight(p->right, x);
-			} else {	
+			} else {
 				if (xRoot->left==nullptr)
 					return xRoot->right;
 				if (xRoot->right==nullptr)
-					return xRoot->left;				
+					return xRoot->left;
 				Node* copyNode = findTheLeftMostNode(p->right);
 				xRoot->info = copyNode->info;
-				xRoot->right = deleteByCopyingRight(xRoot->right, copyNode->info);				
+				xRoot->right = deleteByCopyingRight(xRoot->right, copyNode->info);
 			}
 			return xRoot;
 		}
-		
+
 		//Delete by merging follwowing the left subtree - default
-		Node* deleteByMerging(Node* xRoot, int x){
+		Node* deleteByMerging(Node* xRoot, int x) {
 			if (xRoot==nullptr) return nullptr;
 			Node* p = xRoot;
-			if (x < p->info){
+			if (x < p->info) {
 				p->left=deleteByMerging(p->left, x);
-			} else if (x > p->info){
+			} else if (x > p->info) {
 				p->right = deleteByMerging(p->right, x);
-			} else {	
+			} else {
 				if (xRoot->left==nullptr)
 					return xRoot->right;
 				if (xRoot->right==nullptr)
-					return xRoot->left;				
+					return xRoot->left;
 				Node* mergeNode = findTheRightMostNode(xRoot->left);
 				mergeNode->right=xRoot->right;
-				return xRoot->left;			
+				return xRoot->left;
 			}
-			return xRoot;			
+			return xRoot;
 		}
-		
+
 		//Delete by merging follwowing the right subtree.
-		Node* deleteByMergingRight(Node* xRoot, int x){
+		Node* deleteByMergingRight(Node* xRoot, int x) {
 			if (xRoot==nullptr) return nullptr;
 			Node* p = xRoot;
-			if (x < p->info){
+			if (x < p->info) {
 				p->left=deleteByMergingRight(p->left, x);
-			} else if (x > p->info){
+			} else if (x > p->info) {
 				p->right = deleteByMergingRight(p->right, x);
-			} else {	
+			} else {
 				if (xRoot->left==nullptr)
 					return xRoot->right;
 				if (xRoot->right==nullptr)
-					return xRoot->left;				
+					return xRoot->left;
 				Node* mergeNode = findTheLeftMostNode(xRoot->right);
 				mergeNode->left=xRoot->left;
-				return xRoot->right;			
+				return xRoot->right;
 			}
-			return xRoot;		
+			return xRoot;
 		}
-		
+
 		int countPre=0;
 		Node* resultPre=nullptr;
 		//Return node theK when traversal by preorder
-		Node* findNodeTheKPreOrder(Node* xRoot, int theK){
+		Node* findNodeTheKPreOrder(Node* xRoot, int theK) {
 			if (xRoot==nullptr) return nullptr;
+
 			countPre++;
-			if (countPre==theK){
-				resultPre=xRoot;
+			if (countPre==theK) {
+				return xRoot;
 			}
-			xRoot->left=findNodeTheKPreOrder(xRoot->left, theK);
-			xRoot->right=findNodeTheKPreOrder(xRoot->right, theK);
-			return resultPre;
+
+			Node* leftResult = findNodeTheKPreOrder(xRoot->left, theK);
+			if (leftResult != nullptr) return leftResult;
+
+			Node* rightResult = findNodeTheKPreOrder(xRoot->right, theK);
+			return rightResult;
 		}
 		int countIn=0;
-		Node* resultIn=nullptr;		
+		Node* resultIn=nullptr;
 		//Return node theK when traversal by InOrder
-		Node* findNodeTheKInOrder(Node* xRoot, int theK){
+		Node* findNodeTheKInOrder(Node* xRoot, int theK) {
 			if (xRoot==nullptr) return nullptr;
-			xRoot->left=findNodeTheKInOrder(xRoot->left, theK);
+			Node* leftResult = findNodeTheKInOrder(xRoot->left, theK);
+			if (leftResult != nullptr) return leftResult;
 			countIn++;
-			if (countIn==theK){
+			if (countIn==theK) {
 				resultIn=xRoot;
 			}
-			xRoot->right=findNodeTheKInOrder(xRoot->right, theK);
-			return resultIn;		
+			Node* rightResult = findNodeTheKInOrder(xRoot->right, theK);
+			return rightResult;
 		}
 
 		int countPost=0;
-		Node* resultPost=nullptr;			
+		Node* resultPost=nullptr;
 		//Return node theK when traversal by PostOrder
-		Node* findNodeTheKPostOrder(Node* xRoot, int theK){
+		Node* findNodeTheKPostOrder(Node* xRoot, int theK) {
 			if (xRoot==nullptr) return nullptr;
-			xRoot->left=findNodeTheKPostOrder(xRoot->left, theK);
-			xRoot->right=findNodeTheKPostOrder(xRoot->right, theK);
+			Node* leftResult = findNodeTheKPreOrder(xRoot->left, theK);
+			if (leftResult != nullptr) return leftResult;
+
+			Node* rightResult = findNodeTheKPreOrder(xRoot->right, theK);
+			return rightResult;
 			countPost++;
-			if (countPost==theK){
+			if (countPost==theK) {
 				resultPost=xRoot;
 			}
-			return resultPost;		
+			return resultPost;
 		}
-		
+
 		//Return node theK when traversal by Breadth First Order
-		Node* findNodeTheKBreadthFirstOrder(Node* xRoot, int theK){
+		Node* findNodeTheKBreadthFirstOrder(Node* xRoot, int theK) {
 			int count=0;
 			Node* result=nullptr;
 			queue<Node*> myQ;
 			myQ.push(xRoot);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				Node* p = myQ.front();
 				myQ.pop();
 				count++;
-				if (count==theK){
-					result=p; break;
+				if (count==theK) {
+					result=p;
+					break;
 				}
 				if (p->left!=nullptr)
 					myQ.push(p->left);
 				if (p->right!=nullptr)
-					myQ.push(p->right);	
-			}	
-			return result;	
-		}				
+					myQ.push(p->right);
+			}
+			return result;
+		}
 };
 
-int main(){
+int main() {
 	BSTree myT;
 	myT.addNode(15);
 	myT.addNode(10);
@@ -426,13 +436,21 @@ int main(){
 
 	cout<<"\nFind node:"<<endl;
 	Node* nodePre = nullptr;
+	myT.countPre = 0;
 	nodePre =myT.findNodeTheKPreOrder(myT.root, 5);
-	cout<<nodePre->info<<endl;
-	
+	if (nodePre != nullptr)
+		cout<<nodePre->info<<endl;
+	else
+		cout<<"Not found"<<endl;
+
 	cout<<"\nFind node BFS:"<<endl;
 	Node* nodeBFS = nullptr;
+
 	nodeBFS=myT.findNodeTheKBreadthFirstOrder(myT.root, 5);
-	cout<<nodeBFS->info<<endl;
-	
+	if (nodeBFS != nullptr)
+		cout<<nodeBFS->info<<endl;
+	else
+		cout<<"Not found"<<endl;
+
 	return 0;
 }
