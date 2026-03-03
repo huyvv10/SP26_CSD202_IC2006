@@ -259,6 +259,128 @@ class BSTree{
 			}
 			return xRoot;
 		}
+		
+		//Delete by copying following the right subtree
+		Node* deleteByCopyingRight(Node* xRoot, int x){
+			if (xRoot==nullptr) return nullptr;
+			Node* p = xRoot;
+			if (x < p->info){
+				p->left=deleteByCopyingRight(p->left, x);
+			} else if (x > p->info){
+				p->right = deleteByCopyingRight(p->right, x);
+			} else {	
+				if (xRoot->left==nullptr)
+					return xRoot->right;
+				if (xRoot->right==nullptr)
+					return xRoot->left;				
+				Node* copyNode = findTheLeftMostNode(p->right);
+				xRoot->info = copyNode->info;
+				xRoot->right = deleteByCopyingRight(xRoot->right, copyNode->info);				
+			}
+			return xRoot;
+		}
+		
+		//Delete by merging follwowing the left subtree - default
+		Node* deleteByMerging(Node* xRoot, int x){
+			if (xRoot==nullptr) return nullptr;
+			Node* p = xRoot;
+			if (x < p->info){
+				p->left=deleteByMerging(p->left, x);
+			} else if (x > p->info){
+				p->right = deleteByMerging(p->right, x);
+			} else {	
+				if (xRoot->left==nullptr)
+					return xRoot->right;
+				if (xRoot->right==nullptr)
+					return xRoot->left;				
+				Node* mergeNode = findTheRightMostNode(xRoot->left);
+				mergeNode->right=xRoot->right;
+				return xRoot->left;			
+			}
+			return xRoot;			
+		}
+		
+		//Delete by merging follwowing the right subtree.
+		Node* deleteByMergingRight(Node* xRoot, int x){
+			if (xRoot==nullptr) return nullptr;
+			Node* p = xRoot;
+			if (x < p->info){
+				p->left=deleteByMergingRight(p->left, x);
+			} else if (x > p->info){
+				p->right = deleteByMergingRight(p->right, x);
+			} else {	
+				if (xRoot->left==nullptr)
+					return xRoot->right;
+				if (xRoot->right==nullptr)
+					return xRoot->left;				
+				Node* mergeNode = findTheLeftMostNode(xRoot->right);
+				mergeNode->left=xRoot->left;
+				return xRoot->right;			
+			}
+			return xRoot;		
+		}
+		
+		int countPre=0;
+		Node* resultPre=nullptr;
+		//Return node theK when traversal by preorder
+		Node* findNodeTheKPreOrder(Node* xRoot, int theK){
+			if (xRoot==nullptr) return nullptr;
+			countPre++;
+			if (countPre==theK){
+				resultPre=xRoot;
+			}
+			xRoot->left=findNodeTheKPreOrder(xRoot->left, theK);
+			xRoot->right=findNodeTheKPreOrder(xRoot->right, theK);
+			return resultPre;
+		}
+		int countIn=0;
+		Node* resultIn=nullptr;		
+		//Return node theK when traversal by InOrder
+		Node* findNodeTheKInOrder(Node* xRoot, int theK){
+			if (xRoot==nullptr) return nullptr;
+			xRoot->left=findNodeTheKInOrder(xRoot->left, theK);
+			countIn++;
+			if (countIn==theK){
+				resultIn=xRoot;
+			}
+			xRoot->right=findNodeTheKInOrder(xRoot->right, theK);
+			return resultIn;		
+		}
+
+		int countPost=0;
+		Node* resultPost=nullptr;			
+		//Return node theK when traversal by PostOrder
+		Node* findNodeTheKPostOrder(Node* xRoot, int theK){
+			if (xRoot==nullptr) return nullptr;
+			xRoot->left=findNodeTheKPostOrder(xRoot->left, theK);
+			xRoot->right=findNodeTheKPostOrder(xRoot->right, theK);
+			countPost++;
+			if (countPost==theK){
+				resultPost=xRoot;
+			}
+			return resultPost;		
+		}
+		
+		//Return node theK when traversal by Breadth First Order
+		Node* findNodeTheKBreadthFirstOrder(Node* xRoot, int theK){
+			int count=0;
+			Node* result=nullptr;
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				count++;
+				if (count==theK){
+					result=p; break;
+				}
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}	
+			return result;	
+		}				
 };
 
 int main(){
@@ -294,8 +416,23 @@ int main(){
 	cout<<"---BFS---"<<endl;
 	myT.breadthFirstTraversal(myT.root);
 	cout<<"\n---Delete by copying---"<<endl;
-	myT.root = myT.deleteByCopyingLeft(myT.root, 10);
-	myT.breadthFirstTraversal(myT.root);
+//	myT.root = myT.deleteByCopyingLeft(myT.root, 10);	//default for PE
+//	myT.root = myT.deleteByCopyingRight(myT.root, 10);	//Tham kham
+//	myT.breadthFirstTraversal(myT.root);
+	cout<<"\n---Delete by merging---"<<endl;
+//	myT.root = myT.deleteByMerging(myT.root, 15);	//default
+//	myT.root = myT.deleteByMergingRight(myT.root, 15);
+//	myT.breadthFirstTraversal(myT.root);
+
+	cout<<"\nFind node:"<<endl;
+	Node* nodePre = nullptr;
+	nodePre =myT.findNodeTheKPreOrder(myT.root, 5);
+	cout<<nodePre->info<<endl;
+	
+	cout<<"\nFind node BFS:"<<endl;
+	Node* nodeBFS = nullptr;
+	nodeBFS=myT.findNodeTheKBreadthFirstOrder(myT.root, 5);
+	cout<<nodeBFS->info<<endl;
 	
 	return 0;
 }
