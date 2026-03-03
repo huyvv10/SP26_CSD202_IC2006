@@ -1,4 +1,6 @@
 #include <iostream>
+#include <queue>
+
 using namespace std;
 class Node{
 	public:
@@ -99,6 +101,164 @@ class BSTree{
 				r=countNodes(xRoot->right);		//Visit right subtree	
 			return g+l+r;						
 		}
+
+		int countNodesBFS(Node* xRoot){
+			int count=0;
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				count++;
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}			
+			return count;
+		}		
+		void breadthFirstTraversal(Node* xRoot){
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				visit(p);
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}
+		}
+		
+		//Count all nodes as leaf nodes - external nodes
+		int countAllLeafNodes(Node* xRoot){
+			int count=0;
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				if (p->left==nullptr && p->right==nullptr)
+					count++;
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}			
+			return count;		
+		}
+		
+		//Return number of internal nodes.
+		int countInternalNodes(Node* xRoot){
+			int count=0;
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				if (p->left!=nullptr || p->right!=nullptr)
+					count++;
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}			
+			return count;			
+		}
+		
+		//Return number of nodes which only has left subtree
+		int countNodesHasOnlyLeftChild(Node* xRoot){
+			int count=0;
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				if (p->left!=nullptr && p->right==nullptr)
+					count++;
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}			
+			return count;
+		}
+
+		//Return number of nodes which only has right subtree
+		int countNodesHasOnlyRightChild(Node* xRoot){
+			int count=0;
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				if (p->left==nullptr && p->right!=nullptr)
+					count++;
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}			
+			return count;
+		}		
+
+		//Return number of nodes which have two children
+		int countNodesHaveTwoChildren(Node* xRoot){
+			int count=0;
+			queue<Node*> myQ;
+			myQ.push(xRoot);
+			while (!myQ.empty()){
+				Node* p = myQ.front();
+				myQ.pop();
+				if (p->left!=nullptr && p->right!=nullptr)
+					count++;
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);	
+			}			
+			return count;
+		}	
+		
+		//Return the maximum node - The right most node.
+		Node* findTheRightMostNode(Node* xRoot){
+			if (xRoot==nullptr) return nullptr;
+			Node* p = xRoot;
+			while (p->right!=nullptr){
+				p=p->right;
+			}
+			return p;
+		}	
+
+		//Return the minimum node - The left most node.
+		Node* findTheLeftMostNode(Node* xRoot){
+			if (xRoot==nullptr) return nullptr;
+			Node* p = xRoot;
+			while (p->left!=nullptr){
+				p=p->left;
+			}
+			return p;
+		}		
+		
+		Node* deleteByCopyingLeft(Node* xRoot, int x){
+			if (xRoot==nullptr) return nullptr;
+			Node* p = xRoot;
+			if (x < p->info){
+				p->left=deleteByCopyingLeft(p->left, x);
+			} else if (x > p->info){
+				p->right = deleteByCopyingLeft(p->right, x);
+			} else {	
+				if (xRoot->left==nullptr)
+					return xRoot->right;
+				if (xRoot->right==nullptr)
+					return xRoot->left;				
+				Node* copyNode = findTheRightMostNode(p->left);
+				xRoot->info = copyNode->info;
+				xRoot->left = deleteByCopyingLeft(xRoot->left, copyNode->info);				
+			}
+			return xRoot;
+		}
 };
 
 int main(){
@@ -125,5 +285,17 @@ int main(){
 	myT.postOrder(myT.root);
 	cout<<endl;
 	cout<<"Number of nodes: "<<myT.countNodes(myT.root)<<endl;
+	cout<<"Number of nodes BFS: "<<myT.countNodesBFS(myT.root)<<endl;
+	cout<<"Number of leaf nodes: "<<myT.countAllLeafNodes(myT.root)<<endl;
+	cout<<"Number of internal nodes: "<<myT.countInternalNodes(myT.root)<<endl;
+	cout<<"Number of nodes only have left subtree: "<<myT.countNodesHasOnlyLeftChild(myT.root)<<endl;
+	cout<<"Number of nodes only have right subtree: "<<myT.countNodesHasOnlyRightChild(myT.root)<<endl;
+	cout<<"Number of nodes have two children: "<<myT.countNodesHaveTwoChildren(myT.root)<<endl;
+	cout<<"---BFS---"<<endl;
+	myT.breadthFirstTraversal(myT.root);
+	cout<<"\n---Delete by copying---"<<endl;
+	myT.root = myT.deleteByCopyingLeft(myT.root, 10);
+	myT.breadthFirstTraversal(myT.root);
+	
 	return 0;
 }
