@@ -19,7 +19,19 @@ class BSTree {
 		BSTree() {
 			this->root=nullptr;
 		}
-		~BSTree() {}
+		~BSTree() {
+			queue<Node*> myQ;
+			myQ.push(root);
+			while (!myQ.empty()) {
+				Node* p = myQ.front();
+				myQ.pop();
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);
+				delete p;	
+			}			
+		}
 
 		bool isEmpty() {
 			return this->root==nullptr;
@@ -322,7 +334,6 @@ class BSTree {
 		}
 
 		int countPre=0;
-		Node* resultPre=nullptr;
 		//Return node theK when traversal by preorder
 		Node* findNodeTheKPreOrder(Node* xRoot, int theK) {
 			if (xRoot==nullptr) return nullptr;
@@ -338,8 +349,8 @@ class BSTree {
 			Node* rightResult = findNodeTheKPreOrder(xRoot->right, theK);
 			return rightResult;
 		}
+		
 		int countIn=0;
-		Node* resultIn=nullptr;
 		//Return node theK when traversal by InOrder
 		Node* findNodeTheKInOrder(Node* xRoot, int theK) {
 			if (xRoot==nullptr) return nullptr;
@@ -347,7 +358,7 @@ class BSTree {
 			if (leftResult != nullptr) return leftResult;
 			countIn++;
 			if (countIn==theK) {
-				resultIn=xRoot;
+				return xRoot;
 			}
 			Node* rightResult = findNodeTheKInOrder(xRoot->right, theK);
 			return rightResult;
